@@ -6,7 +6,7 @@ from alien import Alien
 from time import sleep
 
 
-def check_events(ai_settings, screen, ship, bullets):
+def check_events(ai_settings, screen, stats, play_button, ship, bullets, aliens):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -14,6 +14,32 @@ def check_events(ai_settings, screen, ship, bullets):
             check_keydown_event(event, ai_settings, screen, ship, bullets)
         elif event.type == pygame.KEYUP:
             check_keyup_event(event, ai_settings, screen, ship, bullets)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            check_play_button(ai_settings, screen, stats, play_button, ship, bullets, aliens, mouse_x, mouse_y)
+
+
+def check_play_button(ai_settings, screen, stats, play_button, ship, bullets, aliens, mouse_x, mouse_y):
+
+    button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
+    if button_clicked and not stats.game_active:
+
+        # 重置游戏设置
+        ai_settings.initialize_dynamic_settings()
+
+        # 游戏开始时隐藏鼠标
+        pygame.mouse.set_visible(False)
+
+        # 重置游戏
+        stats.reset_stats()
+        stats.game_active = True
+
+        # 清空子弹和外星人
+        bullets.empty()
+        aliens.empty()
+
+        create_fleet(ai_settings, screen, ship, aliens)
+        ship.center_ship()
 
 
 def check_keydown_event(event, ai_settings, screen, ship, bullets):
@@ -50,11 +76,13 @@ def update_bullets(ai_settings, screen, ship, aliens, bullets):
 
 
 def check_bullet_alien_collisions(ai_settings, screen, ship, aliens, bullets):
-    pygame.sprite.groupcollide(bullets, aliens, True, True)
+    pygame.sprite.groupcollide(bullets, aliens, False, True)
 
     if len(aliens) == 0:
         bullets.empty()
         create_fleet(ai_settings, screen, ship, aliens)
+
+        ai_settings.increase_speed()
 
 
 def create_fleet(ai_settings, screen, ship, aliens):
@@ -117,6 +145,7 @@ def check_aliens_bottom(ai_settings, stats, screen, ship, aliens, bullets):
 def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
 
     if stats.ships_left > 0:
+
         # 减少飞船数量
         stats.ships_left -= 1
 
@@ -131,6 +160,8 @@ def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
         sleep(0.5)
     else:
         stats.game_active = False
+        # 游戏结束时显示鼠标
+        pygame.mouse.set_visible(True)
 
 
 def check_fleet_edges(ai_settings, aliens):
@@ -147,7 +178,7 @@ def change_fleet_direction(ai_settings, aliens):
     ai_settings.fleet_direction *= -1
 
 
-def update_screen(ai_settings, screen, ship, aliens, bullets):
+def update_screen(ai_settings, screen, stats, ship, aliens, bullets, play_button):
     screen.fill(ai_settings.bg_color)
 
     for bullet in bullets.sprites():
@@ -155,5 +186,8 @@ def update_screen(ai_settings, screen, ship, aliens, bullets):
 
     ship.blitme()
     aliens.draw(screen)
+
+    if not stats.game_active:
+        play_button.draw_button()
 
     pygame.display.flip()
