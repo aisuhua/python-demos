@@ -1,0 +1,15 @@
+
+from pygal.maps.world import COUNTRIES
+
+
+def get_country_code(country_name):
+    for code, name in COUNTRIES.items():
+        if name == country_name:
+            return code
+
+    return None
+
+
+# print(get_country_code('Spain'))
+# print(get_country_code('Sweden'))
+# print(get_country_code('South Africa'))
