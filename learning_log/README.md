@@ -44,3 +44,6 @@ python manage.py shell
 # 编写视图
 # 编写模板
 ```
+
+- [Django](https://www.djangoproject.com/)
+- [Bootstrap 3 for Django](https://github.com/dyve/django-bootstrap3)
