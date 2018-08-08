@@ -4,7 +4,10 @@
 
 - [Resources for Python Crash Course, from No Starch Press.](http://ehmatthes.github.io/pcc/index.html)
 
-## 待学习
+## TODO
 
-- Decorator 装饰器
+- Decorator
 - Class Meta
+- pip
+- curl
+- connect mysql
