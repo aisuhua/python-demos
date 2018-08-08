@@ -120,3 +120,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# 自定义设置
+# 登录页面
+LOGIN_URL = '/users/login/'

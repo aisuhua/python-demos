@@ -1,6 +1,12 @@
 # Learning log
 
 ```sh
+# 创建新项目
+mkdir learning_logs
+
+# 新建虚拟环境
+python3 -m venv ll_env
+
 # 安装django
 source ll_env/bin/activate
 pip3 install Django
